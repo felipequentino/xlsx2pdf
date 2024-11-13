@@ -157,7 +157,7 @@ function formatarData(dataExcel) {
     let dataObj;
     if (typeof dataExcel === 'number') {
         // Se for um número, converte do formato Excel para data
-        dataObj = new Date((dataExcel - 25569) * 86400 * 1000);
+        dataObj = new Date((dataExcel - 25568) * 86400 * 1000);
     } else {
         // Se já for uma data, converte para objeto Date
         dataObj = new Date(dataExcel);
