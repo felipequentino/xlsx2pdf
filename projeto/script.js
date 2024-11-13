@@ -105,7 +105,7 @@ function gerarPDF(dados, indice, qrcodeDataURL) {
 
     // Tabela com Data da Viagem, Horário, Agência, Poltrona
     y += 15;
-    doc.text(`Data da Viagem: ${formatarData(dados.data_vaigem)}`, 20, y);
+    doc.text(`Data da Viagem: ${formatarData(dados.data_viagem)}`, 20, y);
     const horario = formatarHorario(dados.horario);
     doc.text(`Horário: ${horario}`, 80, y);
     doc.text(`Agente: ${dados.agente || ''}`, 120, y);
