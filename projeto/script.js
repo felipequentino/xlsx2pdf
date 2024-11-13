@@ -58,7 +58,8 @@ document.getElementById('btnGerar').addEventListener('click', function () {
                 const row = jsonData[index];
                 const pdfDoc = gerarPDF(row, index + 1, qrcodeDataURL);
                 const pdfBlob = await pdfDoc.output('blob');
-                zip.file(`bilhete_${index + 1}.pdf`, pdfBlob);
+                const nomeArquivo = `bilhete_${row.nome || 'sem_nome'}.pdf`; // Usar dados.nome para o nome do arquivo
+                zip.file(nomeArquivo, pdfBlob);
             }
 
             // Gerar o arquivo ZIP e iniciar o download
@@ -105,23 +106,24 @@ function gerarPDF(dados, indice, qrcodeDataURL) {
     // Tabela com Data da Viagem, Horário, Agência, Poltrona
     y += 15;
     doc.text(`Data da Viagem: ${formatarData(dados.data_vaigem)}`, 20, y);
-    doc.text(`Horário: ${dados.horario || ''}`, 80, y);
-    doc.text(`Agência: ${dados.agencia || ''}`, 120, y);
+    const horario = formatarHorario(dados.horario);
+    doc.text(`Horário: ${horario}`, 80, y);
+    doc.text(`Agente: ${dados.agente || ''}`, 120, y);
     doc.text(`Poltrona: ${dados.poltrona || ''}`, 170, y);
-
-    // Texto adicional e Fone
-    y += 15;
-    const texto = "Para adiar a passagem o passageiro deverá nos avisar com 02 dias de antecedência, o passageiro tem direito a uma bolsa e uma mala, acima disso será cobrado a parte.";
-    const textoQuebrado = doc.splitTextToSize(texto, 170);
-    doc.text(textoQuebrado, 20, y);
-    y += textoQuebrado.length * 7;
-    doc.text(`FONE: ${dados.fone || ''}`, 20, y);
 
     // Tabela com Data de Emissão, Valor, Agente ou Agência
     y += 15;
     doc.text(`Data de Emissão: ${formatarData(dados.data_emissao)}`, 20, y);
     doc.text(`Valor: R$ ${dados.valor || ''}`, 80, y);
-    doc.text(`Agente/Agência: ${dados.agencia || ''}`, 120, y);
+    doc.text(`Agência: Anny Viagens`, 120, y);
+
+    // Texto adicional e Fone
+    y += 15;
+    doc.text(`FONE: ${dados.fone || ''}`, 20, y);
+    y += 15;
+    const texto = "Para adiar a passagem o passageiro deverá nos avisar com 02 dias de antecedência, o passageiro tem direito a uma bolsa e uma mala, acima disso será cobrado a parte.";
+    const textoQuebrado = doc.splitTextToSize(texto, 170);
+    doc.text(textoQuebrado, 20, y);
 
     // Mensagem final
     y += 15;
@@ -138,6 +140,16 @@ function gerarPDF(dados, indice, qrcodeDataURL) {
 
     // Retornar o documento PDF para ser adicionado ao ZIP
     return doc;
+}
+
+function formatarHorario(horarioExcel) {
+    if (typeof horarioExcel === 'number') {
+        const totalSeconds = Math.round(horarioExcel * 24 * 60 * 60);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    }
+    return horarioExcel || '';
 }
 
 function formatarData(dataExcel) {
