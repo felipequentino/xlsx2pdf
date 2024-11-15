@@ -84,7 +84,7 @@ function gerarPDF(dados, indice, qrcodeDataURL) {
 
     // Definir estilos e posições
     let y = 20;
-    doc.setFontSize(16);
+    doc.setFontSize(24);
     doc.setFont('Helvetica', 'bold');
     doc.text('BILHETE DE PASSAGEM', 105, y, { align: 'center' });
     y += 5;
@@ -93,7 +93,7 @@ function gerarPDF(dados, indice, qrcodeDataURL) {
     y += 10;
 
     // Dados do cliente
-    doc.setFontSize(12);
+    doc.setFontSize(20);
     doc.setFont('Helvetica', 'normal');
     doc.text(`Nome: ${dados.nome || ''}`, 20, y);
     y += 7;
